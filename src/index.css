@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-light: #ffffff;
+  --color-dark: #171717;
+  --color-gray: #f4f4f4;
+}
+
+.accent-text {
+  @apply text-gray-600;
+}
+
+body {
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  color: var(--color-dark);
+  background: var(--color-light);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  letter-spacing: -0.011em;
+}
+
+/* Tesla-inspired input fields */
+.auth-input-field {
+  @apply w-full px-4 py-4 bg-white border-0 border-b-2 border-gray-300 focus:border-black outline-none transition-all duration-200;
+}
+
+/* Tesla-inspired buttons */
+.auth-button {
+  @apply w-full px-6 py-4 bg-black text-white font-medium hover:bg-gray-900 transition-all duration-200 uppercase text-sm tracking-wider disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+/* Tesla button variants */
+.btn-primary {
+  @apply px-6 py-3 bg-black text-white font-medium hover:bg-gray-900 transition-all duration-200 uppercase text-sm tracking-wider;
+}
+
+.btn-secondary {
+  @apply px-6 py-3 bg-white text-black border-2 border-black font-medium hover:bg-black hover:text-white transition-all duration-200 uppercase text-sm tracking-wider;
+}
+
+.btn-accent {
+  @apply px-6 py-3 bg-accent text-white font-medium hover:bg-accent-hover transition-all duration-200 uppercase text-sm tracking-wider;
+}
+
+/* Tesla-inspired card */
+.tesla-card {
+  @apply bg-white transition-all duration-300;
+}
+
+/* Tesla-inspired divider */
+.tesla-divider {
+  @apply border-t border-gray-200;
+}
