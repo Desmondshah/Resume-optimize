@@ -141,30 +141,22 @@ export function ResumeUpload({ onUploadComplete }: ResumeUploadProps) {
 
   return (
     <div className="space-y-8">
-      {/* Info Banner */}
-      <div className="bg-gray-50 border border-gray-200 p-6">
-        <div className="flex items-start space-x-4">
-          <div className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center text-sm font-bold">
-            i
+      {/* Simplified Info Banner */}
+      <div className="bg-black text-white p-6">
+        <h4 className="text-sm font-bold mb-3 uppercase tracking-wide">📋 Two Ways to Upload</h4>
+        <div className="space-y-4 text-sm">
+          <div>
+            <p className="font-semibold mb-2">✅ Best: Copy & Paste (Recommended)</p>
+            <ol className="space-y-1 ml-4 list-decimal opacity-90">
+              <li>Open your resume in any program</li>
+              <li>Select all (Ctrl+A or Cmd+A)</li>
+              <li>Copy (Ctrl+C or Cmd+C)</li>
+              <li>Paste below and click "Save Resume"</li>
+            </ol>
           </div>
-          <div className="flex-1">
-            <h4 className="text-sm font-semibold text-black mb-2 uppercase tracking-wide">Recommended: Copy & Paste Method</h4>
-            <div className="space-y-3">
-              <div>
-                <p className="text-sm font-medium text-black mb-1">Works with ANY format - 100% accurate</p>
-                <ol className="text-sm text-gray-700 space-y-1 list-decimal list-inside ml-4">
-                  <li>Open your resume (PDF, Word, Google Docs, etc.)</li>
-                  <li>Select all text: <kbd className="px-2 py-1 bg-gray-200 text-xs font-mono">Ctrl+A</kbd> (or <kbd className="px-2 py-1 bg-gray-200 text-xs font-mono">Cmd+A</kbd>)</li>
-                  <li>Copy: <kbd className="px-2 py-1 bg-gray-200 text-xs font-mono">Ctrl+C</kbd> (or <kbd className="px-2 py-1 bg-gray-200 text-xs font-mono">Cmd+C</kbd>)</li>
-                  <li>Paste in the text area below</li>
-                  <li>Click "Save Resume"</li>
-                </ol>
-              </div>
-              <div className="pt-2 border-t border-gray-200">
-                <p className="text-sm font-medium text-black mb-1">Alternative: Direct Upload</p>
-                <p className="text-sm text-gray-700">You can also try uploading PDF or TXT files directly, though copy/paste is more reliable for complex PDFs.</p>
-              </div>
-            </div>
+          <div className="pt-3 border-t border-gray-700">
+            <p className="font-semibold mb-1">⚡ Quick: File Upload</p>
+            <p className="opacity-90">Upload PDF or TXT files directly (best for simple resumes)</p>
           </div>
         </div>
       </div>
@@ -196,17 +188,14 @@ export function ResumeUpload({ onUploadComplete }: ResumeUploadProps) {
             />
           </svg>
           <span className="text-lg font-semibold text-black uppercase tracking-wide">
-            Try Direct Upload
+            Click to Upload File
           </span>
           <span className="text-sm text-gray-600">
-            Works best with simple PDF or TXT files
-          </span>
-          <span className="text-xs text-gray-400 uppercase tracking-wide">
-            PDF or TXT (Max 10MB)
+            PDF, TXT, DOC, DOCX
           </span>
           {isUploading && (
             <span className="text-xs text-black font-medium uppercase tracking-wide animate-pulse">
-              Processing file...
+              Processing...
             </span>
           )}
         </label>
@@ -214,39 +203,36 @@ export function ResumeUpload({ onUploadComplete }: ResumeUploadProps) {
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-200"></div>
+          <div className="w-full border-t-2 border-gray-200"></div>
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-4 bg-white text-gray-500 uppercase tracking-wide">Recommended Method</span>
+          <span className="px-4 bg-white text-black font-semibold uppercase tracking-wide">OR PASTE TEXT</span>
         </div>
       </div>
 
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <label htmlFor="resume-text" className="text-sm font-semibold text-black uppercase tracking-wide">
-            Paste Your Resume Text
-          </label>
-          <span className="text-xs text-gray-500 uppercase tracking-wide">All formats supported</span>
-        </div>
+        <label htmlFor="resume-text" className="block text-sm font-semibold text-black uppercase tracking-wide">
+          Paste Resume Text Here
+        </label>
         <textarea
           id="resume-text"
           value={resumeText}
           onChange={(e) => setResumeText(e.target.value)}
-          placeholder="1. Open your resume (PDF, Word, etc.)&#10;2. Select all text (Ctrl+A or Cmd+A)&#10;3. Copy (Ctrl+C or Cmd+C)&#10;4. Paste here (Ctrl+V or Cmd+V)&#10;5. Click 'Save Resume' below&#10;&#10;This method works with ANY file format and ensures perfect text extraction!"
-          className="w-full h-64 px-4 py-4 border-0 border-b-2 border-gray-300 focus:border-black outline-none transition-all duration-200 resize-none font-mono text-sm bg-white"
+          placeholder="Paste your resume text here...&#10;&#10;💡 Tip: Works with any format (PDF, Word, Google Docs, etc.)"
+          className="w-full h-64 px-4 py-4 border-2 border-gray-300 focus:border-black outline-none transition-all duration-200 resize-none font-mono text-sm bg-white"
           disabled={isUploading}
         />
         {resumeText.includes("%PDF") && (
-          <div className="bg-gray-100 border border-gray-300 p-4 text-sm text-gray-800">
-            ⚠️ Raw PDF content detected. Please upload the PDF file or copy the actual text from your PDF viewer.
+          <div className="bg-gray-900 text-white border-2 border-gray-900 p-4 text-sm">
+            ⚠️ This looks like raw PDF data. Please copy the actual text from your PDF viewer instead.
           </div>
         )}
         <button
           onClick={handlePasteResume}
           disabled={isUploading || !resumeText.trim()}
-          className="btn-primary w-full disabled:bg-gray-300 disabled:cursor-not-allowed"
+          className="w-full py-4 bg-black text-white font-semibold uppercase tracking-wide hover:bg-gray-800 transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          {isUploading ? "Saving..." : "Save Resume"}
+          {isUploading ? "SAVING..." : "SAVE RESUME"}
         </button>
       </div>
     </div>

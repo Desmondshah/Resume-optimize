@@ -83,7 +83,11 @@ export function ResumeOptimizer({ resumeId }: ResumeOptimizerProps) {
       });
 
       toast.dismiss(toastId);
-      toast.success("Resume optimized successfully!");
+      if (optimizationType === "job-tailored") {
+        toast.success("Resume optimized! Scroll down to generate a matching cover letter.", { duration: 5000 });
+      } else {
+        toast.success("Resume optimized successfully!");
+      }
     } catch (error: any) {
       if (toastId!) toast.dismiss(toastId);
       toast.error(error.message || "Failed to optimize resume");
@@ -161,14 +165,24 @@ export function ResumeOptimizer({ resumeId }: ResumeOptimizerProps) {
 
   return (
     <div className="space-y-10">
+      {/* Simple Instructions Banner */}
+      <div className="bg-black text-white p-6">
+        <h3 className="text-sm font-bold mb-2 uppercase tracking-wide">🚀 How to Optimize</h3>
+        <div className="text-sm space-y-2 opacity-90">
+          <p><strong>Step 1:</strong> Choose "ATS-Friendly" for general formatting or "Job-Tailored" to match a specific job</p>
+          <p><strong>Step 2:</strong> Click "Optimize Resume" and wait for AI to process</p>
+          <p><strong>Step 3:</strong> Review results and copy or download your optimized resume</p>
+        </div>
+      </div>
+
       {/* Resume Info Banner */}
-      <div className="bg-gray-50 border border-gray-200 p-6">
+      <div className="bg-gray-50 border-2 border-gray-200 p-6">
         <div className="flex items-start space-x-4">
           <div className="flex-shrink-0 w-10 h-10 bg-black text-white flex items-center justify-center font-bold">
-            R
+            ✓
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-black uppercase tracking-wide text-sm mb-1">Your Resume</h3>
+            <h3 className="font-semibold text-black uppercase tracking-wide text-sm mb-1">Current Resume</h3>
             <p className="text-sm text-gray-700">
               {resume.fileName} · {new Date(resume.uploadedAt).toLocaleDateString()}
             </p>
@@ -179,7 +193,7 @@ export function ResumeOptimizer({ resumeId }: ResumeOptimizerProps) {
       {/* Optimization Type Selection */}
       <div className="space-y-4">
         <label className="block text-sm font-semibold text-black uppercase tracking-wide">
-          Select Optimization Type
+          Choose Optimization Type
         </label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <button
@@ -191,10 +205,10 @@ export function ResumeOptimizer({ resumeId }: ResumeOptimizerProps) {
             }`}
           >
             <div className={`font-semibold mb-2 text-base ${optimizationType === "ats" ? "text-white" : "text-black"}`}>
-              ATS-Friendly Format
+              ⚡ ATS-Friendly Format
             </div>
             <div className={`text-sm ${optimizationType === "ats" ? "text-gray-200" : "text-gray-600"}`}>
-              Optimize formatting for Applicant Tracking Systems
+              Quick optimization for better ATS compatibility
             </div>
           </button>
           <button
@@ -206,10 +220,10 @@ export function ResumeOptimizer({ resumeId }: ResumeOptimizerProps) {
             }`}
           >
             <div className={`font-semibold mb-2 text-base ${optimizationType === "job-tailored" ? "text-white" : "text-black"}`}>
-              Job-Tailored
+              🎯 Job-Tailored
             </div>
             <div className={`text-sm ${optimizationType === "job-tailored" ? "text-gray-200" : "text-gray-600"}`}>
-              Match your resume to a specific job description
+              Match keywords and skills from a specific job posting
             </div>
           </button>
         </div>
@@ -219,21 +233,26 @@ export function ResumeOptimizer({ resumeId }: ResumeOptimizerProps) {
       {optimizationType === "job-tailored" && (
         <div>
           <label htmlFor="job-select" className="block text-sm font-semibold text-black mb-3 uppercase tracking-wide">
-            Select Job Description
+            Select Target Job
           </label>
           <select
             id="job-select"
             value={selectedJobId}
             onChange={(e) => setSelectedJobId(e.target.value as Id<"jobDescriptions"> | "")}
-            className="w-full px-4 py-4 border-0 border-b-2 border-gray-300 focus:border-black outline-none transition-all duration-200 bg-white"
+            className="w-full px-4 py-4 border-2 border-gray-300 focus:border-black outline-none transition-all duration-200 bg-white"
           >
-            <option value="">-- Select a job description --</option>
+            <option value="">-- Choose a job description --</option>
             {jobDescriptions?.map((job) => (
               <option key={job._id} value={job._id}>
                 {job.title}
               </option>
             ))}
           </select>
+          {jobDescriptions?.length === 0 && (
+            <p className="text-sm text-gray-600 mt-2">
+              💡 No job descriptions saved yet. Add one in the "Getting Started" tab.
+            </p>
+          )}
         </div>
       )}
 
@@ -242,18 +261,18 @@ export function ResumeOptimizer({ resumeId }: ResumeOptimizerProps) {
         <button
           onClick={handleOptimize}
           disabled={isOptimizing || (optimizationType === "job-tailored" && !selectedJobId)}
-          className="btn-primary w-full disabled:bg-gray-300 disabled:cursor-not-allowed"
+          className="w-full py-4 bg-black text-white font-semibold uppercase tracking-wide hover:bg-gray-800 transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          {isOptimizing ? "Optimizing..." : "Optimize Resume"}
+          {isOptimizing ? "AI IS OPTIMIZING..." : "OPTIMIZE RESUME"}
         </button>
 
         {optimizationType === "job-tailored" && selectedJobId && (
           <button
             onClick={handleAnalyzeKeywords}
             disabled={isAnalyzing || !resume}
-            className="btn-accent w-full disabled:bg-gray-300 disabled:cursor-not-allowed"
+            className="w-full py-4 bg-gray-100 text-black font-semibold uppercase tracking-wide hover:bg-gray-200 border-2 border-gray-300 transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
-            {isAnalyzing ? "Analyzing..." : "Analyze Keyword Match"}
+            {isAnalyzing ? "ANALYZING..." : "ANALYZE KEYWORD MATCH"}
           </button>
         )}
       </div>
@@ -366,29 +385,48 @@ export function ResumeOptimizer({ resumeId }: ResumeOptimizerProps) {
 
       {/* Optimized Resume Display */}
       {optimizedText && (
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold text-black uppercase tracking-wide">Optimized Resume</h3>
+        <div className="space-y-4 border-2 border-black p-8">
+          <div className="flex justify-between items-center pb-4 border-b-2 border-gray-200">
+            <h3 className="text-lg font-semibold text-black uppercase tracking-wide">✨ Your Optimized Resume</h3>
             <div className="flex gap-2">
               <button
                 onClick={handleCopyToClipboard}
-                className="btn-secondary px-4 py-2 text-xs"
+                className="px-6 py-2 bg-gray-100 text-black font-semibold uppercase tracking-wide text-xs hover:bg-gray-200 border-2 border-gray-300 transition-all duration-200"
               >
-                Copy
+                COPY
               </button>
               <button
                 onClick={handleDownload}
-                className="btn-primary px-4 py-2 text-xs"
+                className="px-6 py-2 bg-black text-white font-semibold uppercase tracking-wide text-xs hover:bg-gray-800 transition-all duration-200"
               >
-                Download
+                DOWNLOAD
               </button>
             </div>
           </div>
-          <div className="bg-white border-2 border-gray-200 p-6 max-h-96 overflow-y-auto">
-            <pre className="whitespace-pre-wrap text-sm text-gray-800 font-mono leading-relaxed">
+          <div className="bg-gray-50 p-6 border-2 border-gray-200">
+            <pre className="whitespace-pre-wrap font-sans text-sm text-gray-900 leading-relaxed">
               {optimizedText}
             </pre>
           </div>
+          
+          {/* Next Step Indicator for Job-Tailored */}
+          {optimizationType === "job-tailored" && selectedJobId && (
+            <div className="bg-black text-white p-6">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-white text-black flex items-center justify-center font-bold text-xl flex-shrink-0">✓</div>
+                <div>
+                  <h4 className="text-sm font-bold mb-2 uppercase tracking-wide">Step 1 Complete!</h4>
+                  <p className="text-sm opacity-90 mb-3">
+                    Your resume has been optimized for this specific job. Now complete your application package:
+                  </p>
+                  <div className="flex items-center gap-3 text-sm">
+                    <span className="opacity-75">Next:</span>
+                    <span className="font-semibold">⬇️ Scroll down to generate a matching cover letter</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
